@@ -1,0 +1,6 @@
+.env
+.DS_Store
+node_modules
+*.jpeg
+*.png
+db.sqlite3
