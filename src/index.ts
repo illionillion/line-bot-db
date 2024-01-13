@@ -84,12 +84,12 @@ const textEventHandler = async (
       break;}
     case "image": {
       const { id } = event.message;
-
-      await downloadContent(id, source.userId + "-" + id + ".jpeg", clientB);
+      const image_path = "/public/images/" + source.userId + "-" + id + ".jpeg"
+      await downloadContent(id, image_path, clientB);
       db.run(
         "insert into message_table (user_id, image_path) values (?, ?)",
         source.userId,
-        source.userId + "-" + id + ".jpeg"
+        image_path
       );
       const response: TextMessage = {
         type: "text",

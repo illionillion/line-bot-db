@@ -74,8 +74,9 @@ const textEventHandler = (event) => __awaiter(void 0, void 0, void 0, function* 
         }
         case "image": {
             const { id } = event.message;
-            yield (0, downloadContent_1.downloadContent)(id, source.userId + "-" + id + ".jpeg", clientB);
-            db.run("insert into message_table (user_id, image_path) values (?, ?)", source.userId, source.userId + "-" + id + ".jpeg");
+            const image_path = "/public/images/" + source.userId + "-" + id + ".jpeg";
+            yield (0, downloadContent_1.downloadContent)(id, image_path, clientB);
+            db.run("insert into message_table (user_id, image_path) values (?, ?)", source.userId, image_path);
             const response = {
                 type: "text",
                 text: "画像を受け取りました。",

@@ -14,9 +14,9 @@ const fs_1 = require("fs");
 const downloadContent = (messageId, downloadPath, client) => __awaiter(void 0, void 0, void 0, function* () {
     const stream = yield client.getMessageContent(messageId);
     return yield new Promise((resolve, reject) => {
-        const writable = (0, fs_1.createWriteStream)(downloadPath);
+        const writable = (0, fs_1.createWriteStream)("./src" + downloadPath);
         stream.pipe(writable);
-        stream.on("end", () => resolve(downloadPath));
+        stream.on("end", () => resolve("./src" + downloadPath));
         stream.on("error", reject);
     });
 });
