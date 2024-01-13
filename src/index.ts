@@ -13,6 +13,7 @@ import express, { Application, Request, Response } from "express";
 import { load } from "ts-dotenv";
 import { downloadContent } from "./lib/downloadContent";
 import sqlite3 from "sqlite3"
+import path from "path";
 
 const env = load({
   CHANNEL_ACCESS_TOKEN: String,
@@ -36,6 +37,7 @@ const clientB = new MessagingApiBlobClient({
 });
 
 const app: Application = express();
+app.use("/public", express.static(path.join(__dirname, "/public/")));
 
 app.get("/", async (_: Request, res: Response): Promise<Response> => {
   return res.status(200).send({

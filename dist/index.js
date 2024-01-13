@@ -18,6 +18,7 @@ const express_1 = __importDefault(require("express"));
 const ts_dotenv_1 = require("ts-dotenv");
 const downloadContent_1 = require("./lib/downloadContent");
 const sqlite3_1 = __importDefault(require("sqlite3"));
+const path_1 = __importDefault(require("path"));
 const env = (0, ts_dotenv_1.load)({
     CHANNEL_ACCESS_TOKEN: String,
     CHANNEL_SECRET: String,
@@ -37,6 +38,7 @@ const clientB = new api_1.MessagingApiBlobClient({
     channelAccessToken: env.CHANNEL_ACCESS_TOKEN || "",
 });
 const app = (0, express_1.default)();
+app.use("/public", express_1.default.static(path_1.default.join(__dirname, "/public/")));
 app.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).send({
         message: "success",
