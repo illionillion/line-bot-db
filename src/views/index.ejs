@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/stylesheets/style.css">
+    <title>LINE Bot履歴</title>
+</head>
+<body>
+    <main>
+        <h1>LINE Bot履歴</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>user id</th>
+                    <th>content</th>
+                    <th>image</th>
+                    <th>date</th>
+                    <% if (content.length !== 0) { %>
+                        <th></th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (content.length === 0) { %>
+                    <tr>
+                        <td colspan="5">No data</td>
+                    </tr>
+                <% } else { %>
+                    <% content.forEach(function (value, key) { %>
+                        <tr>
+                            <td><%= value["id"] %></td>
+                            <td><%= value["user_id"] %></td>
+                            <td><%= value["content"] %></td>
+                            <td>
+                                <% if (value['image_path'] !== "") { %>
+                                    <img src="<%= value['image_path'] %>"/>
+                                <% } %>
+                            </td>
+                            <td><%= value["date"] %></td>
+                            <td>
+                                <form action="/delete" method="post">
+                                    <input type="hidden" name="id" value="<%= value['id'] %>">
+                                    <input type="submit" value="削除" disabled>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

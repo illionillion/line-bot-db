@@ -12,7 +12,7 @@ import {
 import express, { Application, Request, Response } from "express";
 import { load } from "ts-dotenv";
 import { downloadContent } from "./lib/downloadContent";
-import sqlite3 from "sqlite3"
+import sqlite3 from "sqlite3";
 import path from "path";
 
 const env = load({
@@ -37,11 +37,22 @@ const clientB = new MessagingApiBlobClient({
 });
 
 const app: Application = express();
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
 app.use("/public", express.static(path.join(__dirname, "/public/")));
 
-app.get("/", async (_: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: "success",
+app.get("/", async (_: Request, res: Response) => {
+  db.serialize(() => {
+    db.all("select * from message_table", (err, rows) => {
+      if (!err) {
+        const data = {
+          content: rows,
+        };
+        res.render("index", data);
+      }
+    });
   });
 });
 
@@ -61,11 +72,11 @@ const textEventHandler = async (
       const resText = (() => {
         switch (Math.floor(Math.random() * 3)) {
           case 0:
-            return text.split("").reverse().join("")
+            return text.split("").reverse().join("");
           case 1:
-            return text.split("").join(" ")
+            return text.split("").join(" ");
           default:
-            return text.split("").reverse().join(" ")
+            return text.split("").reverse().join(" ");
         }
       })();
       console.log(resText);
@@ -83,10 +94,11 @@ const textEventHandler = async (
         replyToken: replyToken,
         messages: [response],
       });
-      break;}
+      break;
+    }
     case "image": {
       const { id } = event.message;
-      const image_path = "/public/images/" + source.userId + "-" + id + ".jpeg"
+      const image_path = "/public/images/" + source.userId + "-" + id + ".jpeg";
       await downloadContent(id, image_path, clientB);
       db.run(
         "insert into message_table (user_id, image_path) values (?, ?)",
@@ -101,7 +113,8 @@ const textEventHandler = async (
         replyToken: replyToken,
         messages: [response],
       });
-      break;}
+      break;
+    }
     default:
       break;
   }

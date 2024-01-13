@@ -38,10 +38,20 @@ const clientB = new api_1.MessagingApiBlobClient({
     channelAccessToken: env.CHANNEL_ACCESS_TOKEN || "",
 });
 const app = (0, express_1.default)();
+// view engine setup
+app.set("views", path_1.default.join(__dirname, "views"));
+app.set("view engine", "ejs");
 app.use("/public", express_1.default.static(path_1.default.join(__dirname, "/public/")));
 app.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.status(200).send({
-        message: "success",
+    db.serialize(() => {
+        db.all("select * from message_table", (err, rows) => {
+            if (!err) {
+                const data = {
+                    content: rows,
+                };
+                res.render("index", data);
+            }
+        });
     });
 }));
 const textEventHandler = (event) => __awaiter(void 0, void 0, void 0, function* () {
