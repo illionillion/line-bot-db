@@ -20,6 +20,8 @@ npm run start:dev
 ngrok http {PORT}
 ```
 
+データベース、`sqlite3 db.sqlite3`でsqliteに入って以下を実行
+
 ```sql
 CREATE TABLE message_table (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
