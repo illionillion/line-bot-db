@@ -41,8 +41,6 @@ const app = (0, express_1.default)();
 // view engine setup
 app.set("views", path_1.default.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
 app.use("/public", express_1.default.static(path_1.default.join(__dirname, "/public/")));
 app.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     db.serialize(() => {
@@ -56,12 +54,6 @@ app.get("/", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     });
 }));
-app.post("/delete", function (req, res, next) {
-    const { id } = req.body;
-    //SQL文, DataBaseのレコード作成
-    db.run("delete from message_table where id = ?", id);
-    res.redirect("/");
-});
 const textEventHandler = (event) => __awaiter(void 0, void 0, void 0, function* () {
     if (event.type !== "message") {
         return;
@@ -126,6 +118,14 @@ app.post("/webhook", (0, bot_sdk_1.middleware)(middlewareConfig), (req, res) => 
     })));
     return res.status(200);
 }));
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: false }));
+app.post("/delete", function (req, res, next) {
+    const { id } = req.body;
+    //SQL文, DataBaseのレコード作成
+    db.run("delete from message_table where id = ?", id);
+    res.redirect("/");
+});
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}/`);
 });
