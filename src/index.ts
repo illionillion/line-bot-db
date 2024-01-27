@@ -15,6 +15,7 @@ import { load } from "ts-dotenv";
 import { downloadContent } from "./lib/downloadContent";
 import sqlite3 from "sqlite3";
 import path from "path";
+import axios from "axios";
 
 const env = load({
   CHANNEL_ACCESS_TOKEN: String,
@@ -69,13 +70,22 @@ const textEventHandler = async (
     case "text": {
       const { text } = event.message;
       
-      if (text.toLowerCase().indexOf("illionillion") > -1) {
+      if (text.toLowerCase().indexOf("github:") > -1) {
+        const username = text.split(':').pop()
+        const github = await axios({
+          url: `https://api.github.com/users/${username?.trim()}`,
+          method: "GET",
+        });
+        
+        if (!Object.keys(github.data).includes("avatar_url")) {
+          return
+        }
         const response: ImageMessage = {
           type: "image",
           originalContentUrl:
-            "https://avatars.githubusercontent.com/u/60034520?v=4",
+            github.data.avatar_url,
           previewImageUrl:
-            "https://avatars.githubusercontent.com/u/60034520?v=4",
+            github.data.avatar_url,
         };
         await client.replyMessage({
           replyToken: replyToken,

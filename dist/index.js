@@ -19,6 +19,7 @@ const ts_dotenv_1 = require("ts-dotenv");
 const downloadContent_1 = require("./lib/downloadContent");
 const sqlite3_1 = __importDefault(require("sqlite3"));
 const path_1 = __importDefault(require("path"));
+const axios_1 = __importDefault(require("axios"));
 const env = (0, ts_dotenv_1.load)({
     CHANNEL_ACCESS_TOKEN: String,
     CHANNEL_SECRET: String,
@@ -62,11 +63,19 @@ const textEventHandler = (event) => __awaiter(void 0, void 0, void 0, function* 
     switch (event.message.type) {
         case "text": {
             const { text } = event.message;
-            if (text.toLowerCase().indexOf("illionillion") > -1) {
+            if (text.toLowerCase().indexOf("github:") > -1) {
+                const username = text.split(':').pop();
+                const github = yield (0, axios_1.default)({
+                    url: `https://api.github.com/users/${username === null || username === void 0 ? void 0 : username.trim()}`,
+                    method: "GET",
+                });
+                if (!Object.keys(github.data).includes("avatar_url")) {
+                    return;
+                }
                 const response = {
                     type: "image",
-                    originalContentUrl: "https://avatars.githubusercontent.com/u/60034520?v=4",
-                    previewImageUrl: "https://avatars.githubusercontent.com/u/60034520?v=4",
+                    originalContentUrl: github.data.avatar_url,
+                    previewImageUrl: github.data.avatar_url,
                 };
                 yield client.replyMessage({
                     replyToken: replyToken,
