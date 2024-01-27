@@ -4,6 +4,7 @@ import {
   WebhookEvent,
   TextMessage,
   MessageAPIResponseBase,
+  ImageMessage,
 } from "@line/bot-sdk";
 import {
   MessagingApiClient,
@@ -67,6 +68,21 @@ const textEventHandler = async (
   switch (event.message.type) {
     case "text": {
       const { text } = event.message;
+      
+      if (text.toLowerCase().indexOf("illionillion") > -1) {
+        const response: ImageMessage = {
+          type: "image",
+          originalContentUrl:
+            "https://avatars.githubusercontent.com/u/60034520?v=4",
+          previewImageUrl:
+            "https://avatars.githubusercontent.com/u/60034520?v=4",
+        };
+        await client.replyMessage({
+          replyToken: replyToken,
+          messages: [response],
+        });
+        return;
+      }
 
       const resText = (() => {
         switch (Math.floor(Math.random() * 3)) {
@@ -145,11 +161,8 @@ app.use(express.urlencoded({ extended: false }));
 app.post("/delete", function (req, res, next) {
   const { id } = req.body;
   //SQL文, DataBaseのレコード作成
-  db.run(
-    "delete from message_table where id = ?",
-    id
-  );
-  res.redirect("/")
+  db.run("delete from message_table where id = ?", id);
+  res.redirect("/");
 });
 
 app.listen(PORT, () => {

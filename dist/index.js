@@ -62,6 +62,18 @@ const textEventHandler = (event) => __awaiter(void 0, void 0, void 0, function* 
     switch (event.message.type) {
         case "text": {
             const { text } = event.message;
+            if (text.toLowerCase().indexOf("illionillion") > -1) {
+                const response = {
+                    type: "image",
+                    originalContentUrl: "https://avatars.githubusercontent.com/u/60034520?v=4",
+                    previewImageUrl: "https://avatars.githubusercontent.com/u/60034520?v=4",
+                };
+                yield client.replyMessage({
+                    replyToken: replyToken,
+                    messages: [response],
+                });
+                return;
+            }
             const resText = (() => {
                 switch (Math.floor(Math.random() * 3)) {
                     case 0:
