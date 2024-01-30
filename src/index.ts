@@ -63,12 +63,27 @@ app.get("/users", async (_: Request, res: Response) => {
       if (!err) {
         const data = {
           content: rows,
-        }
-        res.render("users", data)
+        };
+        res.render("users", data);
       }
-    })
-  })
-})
+    });
+  });
+});
+
+app.get("/talk-room/:userId", async (req: Request, res: Response) => {
+  const { userId } = req.params
+  db.serialize(() => {
+    db.all("select * from message_table where user_id = ?", [userId], (err, rows) => {
+      if (!err) {
+        const data = {
+          userId: userId,
+          content: rows,
+        };
+        res.render("talk-room", data);
+      }
+    });
+  });
+});
 
 const textEventHandler = async (
   event: WebhookEvent
