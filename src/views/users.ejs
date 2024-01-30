@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/stylesheets/style.css">
+    <title>LINE Bot履歴</title>
+</head>
+<body>
+    <main>
+        <h1>LINE Bot履歴</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>user_id</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (content.length === 0) { %>
+                    <tr>
+                        <td colspan="2">No data</td>
+                    </tr>
+                <% } else { %>
+                    <% content.forEach(function (value, key) { %>
+                        <tr>
+                            <td><%= value["user_id"] %></td>
+                            <td>
+                                <a href="/talk-room/<%= value['user_id'] %>">トークルーム</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

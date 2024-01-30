@@ -57,6 +57,19 @@ app.get("/", async (_: Request, res: Response) => {
   });
 });
 
+app.get("/users", async (_: Request, res: Response) => {
+  db.serialize(() => {
+    db.all("select distinct user_id from message_table", (err, rows) => {
+      if (!err) {
+        const data = {
+          content: rows,
+        }
+        res.render("users", data)
+      }
+    })
+  })
+})
+
 const textEventHandler = async (
   event: WebhookEvent
 ): Promise<MessageAPIResponseBase | undefined> => {
