@@ -211,6 +211,25 @@ app.post(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.post("/send", async (req: Request, res: Response, next) => {
+  const { userId, message } = req.body;
+  try {
+    await client.pushMessage({
+      to: userId,
+      messages: [
+        {
+          type: "text",
+          text: message,
+        },
+      ],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  res.redirect(`/talk-room/${userId}`);
+});
+
 app.post("/delete", function (req, res, next) {
   const { id } = req.body;
   //SQL文, DataBaseのレコード作成

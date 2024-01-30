@@ -51,6 +51,11 @@
                 <% } %>
             </tbody>
         </table>
+        <form action="/send" method="post">
+            <div><input type="hidden" name="userId"  value="<%= userId %>"></div>
+            <div><textarea name="message" id="" cols="30" rows="10"></textarea></div>
+            <div><input type="submit" value="送信"></div>
+        </form>
     </main>
 </body>
 </html>
